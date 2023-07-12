@@ -1,3 +1,83 @@
-<template><q-page>Olá Mundo</q-page></template>
+<template>
+  <q-page>
+    <div>
+      <!-- TODO: Criar logo -->
+      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+        <div class="q-pa-md">
+          <q-input
+            square
+            filled
+            v-model="username"
+            label="Usuário"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 0) || 'Por favor, digite seu nome',
+            ]"
+          />
+          <q-input
+            v-model="password"
+            filled
+            :type="isPwd ? 'password' : 'text'"
+            label="Senha"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 0) || 'Por favor, digite sua senha',
+            ]"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
+            </template>
+          </q-input>
 
-<script setup lang="ts"></script>
+          <q-btn label="Submit" type="submit" color="primary" />
+        </div>
+      </q-form>
+
+      <hr />
+
+      <div class="actions q-pa-md">
+        <div class="text-h6 text-bold">Ações</div>
+        <router-link to="/congressperson/list">
+          <div class="action-card">
+            <!-- TODO: usar icones adequados para as ações "https://quasar.dev/vue-components/icon#naming-convention" -->
+            <q-card>
+              <img src="https://source.unsplash.com/featured/100x100" alt="#" />
+            </q-card>
+            <div class="text-body1 text-thin">Listar Deputados</div>
+          </div>
+        </router-link>
+      </div>
+    </div>
+  </q-page>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const username = ref('');
+const password = ref('');
+const isPwd = ref(true);
+
+function onSubmit() {
+  console.log(username.value);
+  console.log(password.value);
+}
+
+function onReset() {
+  username.value = '';
+  password.value = '';
+}
+</script>
+
+<style lang="sass" scoped>
+
+.actions
+  .action-card
+    width: 100%
+    max-width: 10rem
+    text-align: center
+</style>

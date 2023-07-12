@@ -4,7 +4,7 @@
       <router-view />
     </q-page-container>
     <q-footer elevated>
-      <q-tabs v-model="tab" dense align="justify">
+      <q-tabs v-model="activeTab" dense align="justify">
         <q-tab name="home" icon="home" @click="navigateTo('/')" />
         <q-tab
           name="list congressperson"
@@ -27,15 +27,30 @@
   </q-layout>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+<script setup lang="ts">
+import { RouteLocationRaw, useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
 
 const router = useRouter();
 
-const navigateTo = (route) => {
+const navigateTo = (route: RouteLocationRaw) => {
   router.push(route);
 };
 
-const tab = ref('home');
+const activeTab = ref('home');
+
+watch(
+  () => router.currentRoute.value.path,
+  (newPath) => {
+    if (newPath === '/') {
+      activeTab.value = 'home';
+    } else if (newPath === '/congressperson/list') {
+      activeTab.value = 'list congressperson';
+    } else if (newPath === '/congressperson/favorites') {
+      activeTab.value = 'favorite congressperson';
+    } else if (newPath === '/settings') {
+      activeTab.value = 'settings';
+    }
+  }
+);
 </script>
