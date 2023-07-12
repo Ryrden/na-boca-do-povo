@@ -22,7 +22,7 @@
         <q-tab name="home" icon="home" @click="navigateTo('/')" />
         <q-tab
           name="list congressperson"
-          icon="people"
+          icon="groups"
           @click="navigateTo('/congressperson/list')"
         />
         <q-tab
@@ -33,7 +33,7 @@
         <!-- TODO: allow change personal config after login (Show just if user is logged) -->
         <q-tab
           name="settings"
-          icon="settings"
+          icon="manage_accounts"
           @click="navigateTo('/settings')"
         />
       </q-tabs>

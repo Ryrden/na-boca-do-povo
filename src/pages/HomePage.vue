@@ -33,7 +33,7 @@
             </template>
           </q-input>
 
-          <q-btn label="Submit" type="submit" color="primary" />
+          <q-btn icon="login" label="Entrar" type="submit" color="primary" />
         </div>
       </q-form>
 
@@ -43,10 +43,7 @@
         <div class="text-h6 text-bold">Ações</div>
         <router-link to="/congressperson/list">
           <div class="action-card">
-            <!-- TODO: usar icones adequados para as ações "https://quasar.dev/vue-components/icon#naming-convention" -->
-            <q-card>
-              <img src="https://source.unsplash.com/featured/100x100" alt="#" />
-            </q-card>
+            <q-icon name="list" size="2rem" />
             <div class="text-body1 text-thin">Listar Deputados</div>
           </div>
         </router-link>
