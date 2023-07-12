@@ -1,6 +1,5 @@
 <template>
   <q-page>
-    Congress Person List
     <q-virtual-scroll :items="congressPersonList" separator v-slot="{ item }">
       <q-item :key="item.id" class="row items-center justify-between">
         <div class="row" clickable @click="seeCongressPersonDetail(item)">
@@ -53,7 +52,7 @@ onMounted(async () => {
         ordenarPor: 'nome',
       },
     });
-    console.log(response.data.dados.splice(0, 3));
+    // TODO: Armazenar dados no pinia com um timestamp de expiração de 1 hora e usar os dados do pinia ao invés de fazer uma nova requisição
     congressPersonList.value = response.data.dados.splice(0, 20);
   } catch (error) {
     console.error(error);

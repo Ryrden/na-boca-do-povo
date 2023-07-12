@@ -1,9 +1,23 @@
 <template>
-  <q-layout view="hHh Lpr lFr">
+  <q-layout view="hHh LpR fFf">
+    <q-header elevated v-show="router.currentRoute.value.path !== '/'">
+      <q-toolbar>
+        <q-btn
+          flat
+          round
+          dense
+          icon="arrow_back"
+          @click="router.go(-1)"
+        ></q-btn>
+        <q-toolbar-title>{{
+          router.currentRoute.value.meta.title
+        }}</q-toolbar-title>
+      </q-toolbar>
+    </q-header>
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer elevated class="fixed-bottom">
+    <q-footer elevated>
       <q-tabs v-model="activeTab" align="justify">
         <q-tab name="home" icon="home" @click="navigateTo('/')" />
         <q-tab

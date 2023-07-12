@@ -12,10 +12,12 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: 'list',
+        meta: { title: 'Listar deputados' },
         component: () => import('pages/CongressPersonListPage.vue'),
       },
       {
         path: 'favorites',
+        meta: { title: 'Deputados favoritos' },
         component: () => import('pages/CongressPersonFavoritesListPage.vue'),
       },
     ],
@@ -26,6 +28,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
+        meta: { title: 'Configurações' },
         component: () => import('pages/SettingsPage.vue'),
       },
     ],
