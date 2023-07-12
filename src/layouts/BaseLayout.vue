@@ -1,10 +1,10 @@
 <template>
-  <q-layout view="hHh Lpr lfr">
+  <q-layout view="hHh Lpr lFr">
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer elevated>
-      <q-tabs v-model="activeTab" dense align="justify">
+    <q-footer elevated class="fixed-bottom">
+      <q-tabs v-model="activeTab" align="justify">
         <q-tab name="home" icon="home" @click="navigateTo('/')" />
         <q-tab
           name="list congressperson"
@@ -37,20 +37,31 @@ const navigateTo = (route: RouteLocationRaw) => {
   router.push(route);
 };
 
-const activeTab = ref('home');
+const activeTab = ref('');
+
+const updateActiveTab = (path: RouteLocationRaw) => {
+  switch (path) {
+    case '/':
+      activeTab.value = 'home';
+      break;
+    case '/congressperson/list':
+      activeTab.value = 'list congressperson';
+      break;
+    case '/congressperson/favorites':
+      activeTab.value = 'favorite congressperson';
+      break;
+    case '/settings':
+      activeTab.value = 'settings';
+      break;
+  }
+};
+
+updateActiveTab(router.currentRoute.value.path);
 
 watch(
   () => router.currentRoute.value.path,
   (newPath) => {
-    if (newPath === '/') {
-      activeTab.value = 'home';
-    } else if (newPath === '/congressperson/list') {
-      activeTab.value = 'list congressperson';
-    } else if (newPath === '/congressperson/favorites') {
-      activeTab.value = 'favorite congressperson';
-    } else if (newPath === '/settings') {
-      activeTab.value = 'settings';
-    }
+    updateActiveTab(newPath);
   }
 );
 </script>
