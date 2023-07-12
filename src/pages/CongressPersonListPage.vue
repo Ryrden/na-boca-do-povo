@@ -1,13 +1,23 @@
 <template>
   <q-page>
     Congress Person List
-    <q-virtual-scroll
-      :items="congressPersonList"
-      separator
-      v-slot="{ item, index }"
-    >
-      <q-item :key="index" class="row items-center justify-between">
-        {{ item.nome }}
+    <q-virtual-scroll :items="congressPersonList" separator v-slot="{ item }">
+      <q-item :key="item.id" class="row items-center justify-between">
+        <div class="row" clickable @click="seeCongressPersonDetail(item)">
+          <q-img
+            :src="item.urlFoto"
+            spinner-color="blue"
+            fit="contain"
+            width="3.5rem"
+            style="border-radius: 5%"
+          />
+          <q-item-section class="q-px-md">
+            <q-item-label class="text-body1">{{ item.nome }}</q-item-label>
+            <q-item-label caption class="text-caption">{{
+              item.siglaPartido
+            }}</q-item-label>
+          </q-item-section>
+        </div>
         <q-icon
           name="favorite_border"
           color="primary"
@@ -43,7 +53,8 @@ onMounted(async () => {
         ordenarPor: 'nome',
       },
     });
-    congressPersonList.value = response.data.dados;
+    console.log(response.data.dados.splice(0, 3));
+    congressPersonList.value = response.data.dados.splice(0, 20);
   } catch (error) {
     console.error(error);
   }
