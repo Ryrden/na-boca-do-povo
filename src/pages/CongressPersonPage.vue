@@ -1,27 +1,47 @@
 <template>
-  <q-page>
-    <!-- <q-item>
-      <q-item-section avatar>
-        <q-avatar>
-          <q-img
-            :src="congressPersonId.value.ultimoStatus.urlFoto"
-            spinner-color="blue"
-            fit="contain"
-            width="3.5rem"
-            style="border-radius: 5%"
-          />
-        </q-avatar>
-      </q-item-section>
-
-      <q-item-section>
-        <q-item-label class="text-body1">{{
-          congressPersonId.value.nomeCivil
-        }}</q-item-label>
-        <q-item-label caption class="text-caption">{{
-          congressPersonId.value.ultimoStatus.siglaPartido
-        }}</q-item-label>
-      </q-item-section>
-    </q-item> -->
+  <q-page v-if="congressPerson">
+    <div class="congress-person-info">
+      <div class="congress-person-photo">
+        <q-img
+          :key="congressPerson.id"
+          :src="congressPerson.ultimoStatus.urlFoto"
+          spinner-color="blue"
+          fit="contain"
+          width="3.5rem"
+          style="border-radius: 5%"
+        />
+      </div>
+      <div class="congress-person-details">
+        <h2>{{ congressPerson.ultimoStatus.nome }}</h2>
+        <p>
+          <strong>Partido:</strong>
+          {{ congressPerson.ultimoStatus.siglaPartido }}
+        </p>
+        <p>
+          <strong>Estado:</strong> {{ congressPerson.ultimoStatus.siglaUf }}
+        </p>
+        <p>
+          <strong>Gabinete:</strong>
+          {{ congressPerson.ultimoStatus.gabinete.nome }}
+        </p>
+        <p><strong>Email:</strong> {{ congressPerson.ultimoStatus.email }}</p>
+        <p>
+          <strong>Data de Nascimento:</strong>
+          {{ congressPerson.dataNascimento }}
+        </p>
+        <p><strong>Escolaridade:</strong> {{ congressPerson.escolaridade }}</p>
+      </div>
+    </div>
+    <div class="congress-person-social">
+      <h3>Redes Sociais:</h3>
+      <ul>
+        <li v-for="socialLink in congressPerson.redeSocial" :key="socialLink">
+          <a :href="socialLink">
+            {{ socialLink }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </q-page>
 </template>
 
@@ -32,23 +52,43 @@ import { api } from 'boot/axios';
 
 const router = useRouter();
 
-const congressPersonId = ref();
+const congressPerson = ref<any>(null);
 
 onMounted(async () => {
-  congressPersonId.value = router.currentRoute.value.params.id;
-
+  const congressPersonId = router.currentRoute.value.params.id;
   try {
-    const response = await api.get(`/deputados/${congressPersonId.value}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    });
-    // TODO: Armazenar dados no pinia com um timestamp de expiração de 1 hora e usar os dados do pinia ao invés de fazer uma nova requisição
-    congressPersonId.value = response.data.dados;
-    console.log(congressPersonId.value);
+    const response = await api.get(`/deputados/${congressPersonId}`);
+    congressPerson.value = response.data.dados;
   } catch (error) {
     console.error(error);
   }
 });
 </script>
+
+<style scoped lang="scss">
+.congress-person-info {
+  display: flex;
+  align-items: center;
+}
+
+.congress-person-photo {
+  margin-right: 1rem;
+}
+
+.congress-person-details h2 {
+  margin: 0;
+}
+
+.congress-person-details p {
+  margin: 0.5rem 0;
+}
+
+.congress-person-social ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.congress-person-social ul li {
+  margin-bottom: 0.5rem;
+}
+</style>
