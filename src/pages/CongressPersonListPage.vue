@@ -2,7 +2,11 @@
   <q-page>
     <q-virtual-scroll :items="congressPersonList" separator v-slot="{ item }">
       <q-item :key="item.id" class="row items-center justify-between">
-        <div class="row" clickable @click="seeCongressPersonDetail(item)">
+        <router-link
+          :to="`/congressperson/detail/${item.id}`"
+          class="row"
+          clickable
+        >
           <q-img
             :src="item.urlFoto"
             spinner-color="blue"
@@ -16,7 +20,7 @@
               item.siglaPartido
             }}</q-item-label>
           </q-item-section>
-        </div>
+        </router-link>
         <q-icon
           name="favorite_border"
           color="primary"
@@ -36,11 +40,6 @@ const congressPersonList = ref([]);
 
 // TODO: alterar tipo do item baseado no tipo correto
 function toggleFavorite(item: unknown) {
-  console.log(item);
-}
-
-// TODO: alterar tipo do item baseado no tipo correto
-function seeCongressPersonDetail(item: unknown) {
   console.log(item);
 }
 

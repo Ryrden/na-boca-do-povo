@@ -16,6 +16,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CongressPersonListPage.vue'),
       },
       {
+        path: 'detail/:id',
+        name: 'CongressPersonDetail',
+        meta: { title: 'Detalhes do deputado' },
+        component: () => import('pages/CongressPersonPage.vue'),
+      },
+      {
         path: 'favorites',
         meta: { title: 'Deputados favoritos' },
         component: () => import('pages/CongressPersonFavoritesListPage.vue'),
