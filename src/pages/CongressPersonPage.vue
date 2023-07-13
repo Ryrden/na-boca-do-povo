@@ -1,21 +1,53 @@
 <template>
   <q-page v-if="congressPerson">
-    <div class="congress-person-info">
-      <div class="congress-person-photo">
-        <q-img
-          :key="congressPerson.id"
-          :src="congressPerson.ultimoStatus.urlFoto"
-          spinner-color="blue"
-          fit="contain"
-          width="3.5rem"
-          style="border-radius: 5%"
-        />
-      </div>
+    <q-item class="row">
+      <q-img
+        :key="congressPerson.id"
+        :src="congressPerson.ultimoStatus.urlFoto"
+        spinner-color="blue"
+        fit="contain"
+        width="40%"
+        style="border-radius: 5%"
+      />
+      <q-item-section>
+        <div class="text-h5">{{ congressPerson.ultimoStatus.nome }}</div>
+        <div caption class="text-subtitle1">
+          {{ congressPerson.ultimoStatus.siglaPartido }}
+        </div>
+        <!-- Titular em exercicion -->
+        <div caption class="text-subtitle1">
+          <q-icon
+            :name="
+              congressPerson.ultimoStatus.situacao === 'Exercício'
+                ? 'check_circle'
+                : 'close_circle'
+            "
+            :color="
+              congressPerson.ultimoStatus.situacao === 'Exercício'
+                ? 'green'
+                : 'red'
+            "
+          />
+          {{
+            congressPerson.ultimoStatus.situacao === 'Exercício'
+              ? 'Titular em exercício'
+              : 'Suplente'
+          }}
+        </div>
+      </q-item-section>
+    </q-item>
+    <q-item>
+      <div class="text-h6">Dados Pessoais</div>
+      <q-item-section class="column">
+        <q-item-label class="text-subtitle1">
+          <strong>CPF:</strong> {{ congressPerson.cpf }}
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+    <!-- <div class="congress-person-info">
       <div class="congress-person-details">
-        <h2>{{ congressPerson.ultimoStatus.nome }}</h2>
         <p>
           <strong>Partido:</strong>
-          {{ congressPerson.ultimoStatus.siglaPartido }}
         </p>
         <p>
           <strong>Estado:</strong> {{ congressPerson.ultimoStatus.siglaUf }}
@@ -41,7 +73,7 @@
           </a>
         </li>
       </ul>
-    </div>
+    </div> -->
   </q-page>
 </template>
 
@@ -64,31 +96,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style scoped lang="scss">
-.congress-person-info {
-  display: flex;
-  align-items: center;
-}
-
-.congress-person-photo {
-  margin-right: 1rem;
-}
-
-.congress-person-details h2 {
-  margin: 0;
-}
-
-.congress-person-details p {
-  margin: 0.5rem 0;
-}
-
-.congress-person-social ul {
-  padding: 0;
-  list-style-type: none;
-}
-
-.congress-person-social ul li {
-  margin-bottom: 0.5rem;
-}
-</style>
