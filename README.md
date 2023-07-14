@@ -34,7 +34,12 @@ npm run format
 
 ### Build the app for production
 ```bash
-quasar build
+cd src-cordova
+npm run build-android
+bundletool build-apks --bundle=app-release.aab --output=app.apks --mode=universal
+
+Change app.apks to app.zip and extract app.zip
+Install universal.apk on device and test
 ```
 
 ### Customize the configuration
