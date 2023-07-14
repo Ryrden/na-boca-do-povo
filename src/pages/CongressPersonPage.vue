@@ -2,13 +2,15 @@
   <q-page v-if="congressPerson">
     <q-item class="row">
       <q-img
+        v-if="congressPerson.ultimoStatus.urlFoto"
         :key="congressPerson.id"
         :src="congressPerson.ultimoStatus.urlFoto"
         spinner-color="blue"
         fit="contain"
-        width="40%"
+        width="10rem"
         style="border-radius: 5%"
       />
+      <q-icon v-else name="person" size="10rem" />
       <q-item-section>
         <div class="text-h5">{{ congressPerson.ultimoStatus.nome }}</div>
         <div caption class="text-subtitle1">
