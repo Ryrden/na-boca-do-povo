@@ -7,7 +7,8 @@
         :src="congressPerson.ultimoStatus.urlFoto"
         spinner-color="blue"
         fit="contain"
-        width="10rem"
+        width="5rem"
+        class="q-mr-md"
         style="border-radius: 5%"
       />
       <q-icon v-else name="person" size="10rem" />
@@ -22,7 +23,7 @@
             :name="
               congressPerson.ultimoStatus.situacao === 'Exercício'
                 ? 'check_circle'
-                : 'close_circle'
+                : 'cancel'
             "
             :color="
               congressPerson.ultimoStatus.situacao === 'Exercício'
@@ -33,49 +34,61 @@
           {{
             congressPerson.ultimoStatus.situacao === 'Exercício'
               ? 'Titular em exercício'
-              : 'Suplente'
+              : `Fora do exercício do mandato: ${congressPerson.ultimoStatus.situacao}`
           }}
         </div>
       </q-item-section>
     </q-item>
     <q-item>
-      <div class="text-h6">Dados Pessoais</div>
-      <q-item-section class="column">
+      <q-item-section class="row">
+        <div class="text-h6">Dados Pessoais</div>
+        <!-- icone Telefone  -->
         <q-item-label class="text-subtitle1">
-          <strong>CPF:</strong> {{ congressPerson.cpf }}
+          <q-icon name="phone" size="2rem" color="primary" alt="Telefone" />
+          <!-- TODO: Adicionar DDD (XX) XXXX-XXXX -->
+          {{ congressPerson.ultimoStatus.gabinete.telefone || 'Não informado' }}
+        </q-item-label>
+        <!-- Email -->
+        <q-item-label class="text-subtitle1">
+          <q-icon name="email" size="2rem" color="primary" alt="Email" />
+          {{ congressPerson.ultimoStatus.email || 'Não informado' }}
+        </q-item-label>
+        <!-- Gabinete (endereço) -->
+        <q-item-label class="text-subtitle1">
+          <q-icon
+            name="location_on"
+            size="2rem"
+            color="primary"
+            alt="Informações do gabinete"
+          />
+          Gabinete:
+          {{ congressPerson.ultimoStatus.gabinete.predio || 'Não informado' }}
+          - Anexo:
+          {{ congressPerson.ultimoStatus.gabinete.sala || 'Não informado' }}
+        </q-item-label>
+        <!-- Data de nascimento -->
+        <q-item-label class="text-subtitle1">
+          <q-icon
+            name="cake"
+            size="2rem"
+            color="primary"
+            alt="Data de nascimento"
+          />
+          <!-- TODO: Mudar formato para DD/MM/AAAA -->
+          {{ congressPerson.dataNascimento || 'Não informado' }}
+        </q-item-label>
+        <!-- Escolaridade -->
+        <q-item-label class="text-subtitle1">
+          <q-icon
+            name="school"
+            size="2rem"
+            color="primary"
+            alt="Nível de Escolaridade"
+          />
+          {{ congressPerson.escolaridade || 'Não informado' }}
         </q-item-label>
       </q-item-section>
     </q-item>
-    <!-- <div class="congress-person-info">
-      <div class="congress-person-details">
-        <p>
-          <strong>Partido:</strong>
-        </p>
-        <p>
-          <strong>Estado:</strong> {{ congressPerson.ultimoStatus.siglaUf }}
-        </p>
-        <p>
-          <strong>Gabinete:</strong>
-          {{ congressPerson.ultimoStatus.gabinete.nome }}
-        </p>
-        <p><strong>Email:</strong> {{ congressPerson.ultimoStatus.email }}</p>
-        <p>
-          <strong>Data de Nascimento:</strong>
-          {{ congressPerson.dataNascimento }}
-        </p>
-        <p><strong>Escolaridade:</strong> {{ congressPerson.escolaridade }}</p>
-      </div>
-    </div>
-    <div class="congress-person-social">
-      <h3>Redes Sociais:</h3>
-      <ul>
-        <li v-for="socialLink in congressPerson.redeSocial" :key="socialLink">
-          <a :href="socialLink">
-            {{ socialLink }}
-          </a>
-        </li>
-      </ul>
-    </div> -->
   </q-page>
 </template>
 
