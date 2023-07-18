@@ -104,7 +104,7 @@
           </q-item-section>
         </router-link>
         <q-icon
-          name="favorite_border"
+          :name="item.favorite ? 'favorite' : 'favorite_border'"
           color="primary"
           size="24px"
           @click="toggleFavorite(item)"
@@ -123,7 +123,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { api } from 'boot/axios';
 import { useNotify } from 'src/composables/useNotify';
-import { useFavorites } from 'src/composables/useFavorites';
+import { useFavorites, Favorite } from 'src/composables/useFavorites';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { CongressPerson } from 'src/core/CongressPersonInterface';
 
@@ -181,6 +181,13 @@ async function toggleFavorite(congressPerson: CongressPerson & { favorite: boole
     const userId: string | undefined = authUser?.user?.value?.id
 
     if (congressPerson.favorite) {
+      await favorites.deleteFavorite(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        userId!,
+        congressPerson.id,
+      );
+      notify.notifySuccess(`Deputado ${congressPerson.nome} desfavoritado com sucesso!`);
+    } else {
       await favorites.addFavorite(
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         userId!,
@@ -190,15 +197,9 @@ async function toggleFavorite(congressPerson: CongressPerson & { favorite: boole
         congressPerson.siglaPartido,
       );
       notify.notifySuccess(`Deputado ${congressPerson.nome} favoritado com sucesso!`)
-      
-    } else {
-      await favorites.deleteFavorite(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        userId!,
-        congressPerson.id,
-      );
-      notify.notifySuccess(`Deputado ${congressPerson.nome} desfavoritado com sucesso!`);
     }
+
+    congressPerson.favorite = !congressPerson.favorite
   } catch (_) {
     notify.notifyError('Não foi possível realizar essa ação')
   }
@@ -215,23 +216,34 @@ const search = ref('');
 const specificFilter: Partial<CongressPersonFilter> = {};
 
 async function fetchCongressPersonList(params: Record<string, string | undefined>): Promise<void> {
-  try {
-    loadingSearchState.value = true;
-    const response = await api.get('/deputados', { params });
-    if (!response.data.dados) {
-      throw new Error('Dados não encontrados');
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    congressPersonListFiltered.value = response.data.dados.map((item: CongressPerson) => {
-      return {
-        ...item, favorite: false
+  const userId: string | undefined = authUser?.user?.value?.id
+
+  let favoritesList: Favorite[] = [];
+
+  // O fetchFavorites não é feito no try só pra ter mais resiliência, pois se caso o usuário não estivesse logado, o mesmo não seria capaz nem de visualizar a listagem dos deputados
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  favorites.fetchFavorites(userId!).then((result) => favoritesList = result).catch(e => {
+    console.log(e);
+  }).finally(async () => {
+    try {
+      loadingSearchState.value = true;
+      const response = await api.get('/deputados', { params });
+      if (!response.data.dados) {
+        throw new Error('Dados não encontrados');
       }
-    });
-    loadingSearchState.value = false;
-    showModal.value = false;
-  } catch (error) {
-    console.error(error);
-  }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      congressPersonListFiltered.value = response.data.dados.map((item: CongressPerson) => {
+        // Melhora a complexidade disso aqui
+        return {
+          ...item, favorite: favoritesList.some((favorite) => item.id === favorite.favorite_congress_person_id)
+        }
+      });
+      loadingSearchState.value = false;
+      showModal.value = false;
+    } catch (error) {
+      console.error(error);
+    }
+  });
 }
 
 async function fetchEntourageList() {
@@ -244,6 +256,8 @@ async function fetchEntourageList() {
     if (!response.data.dados) {
       throw new Error('Dados não encontrados');
     }
+
+
     entourageOptions.value = response.data.dados.map(({ sigla }: { sigla: string }) => sigla);
   } catch (error) {
     console.error(error);

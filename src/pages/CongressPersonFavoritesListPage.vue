@@ -30,7 +30,7 @@
             </q-item-section>
             </router-link>
             <q-icon
-            name="favorite_border"
+            name="favorite"
             color="primary"
             size="24px"
             @click="removeFavorite(item)"
@@ -59,8 +59,6 @@ const authUser = useAuthUser();
 const congressPersonFavoritesList: Ref<CongressPerson[]> = ref([]);
 
 async function removeFavorite(congressPerson: CongressPerson) {
-  console.log(congressPerson);
-  console.log(authUser.user.value);
 
   try {
     const userId: string | undefined = authUser?.user?.value?.id;
@@ -71,6 +69,7 @@ async function removeFavorite(congressPerson: CongressPerson) {
       congressPerson.id,
     );
     notify.notifySuccess(`Deputado ${congressPerson.nome} desfavoritado com sucesso!`);
+    congressPersonFavoritesList.value = [...congressPersonFavoritesList.value].filter((curr) => curr.id != congressPerson.id);
   } catch (_) {
     notify.notifyError('Não foi possível desfavoritar esse deputado');
   }

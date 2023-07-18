@@ -60,3 +60,4 @@ function useFavorites() {
 }
 
 export { useFavorites };
+export type { Favorite };
