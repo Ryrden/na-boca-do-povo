@@ -33,27 +33,9 @@
             </template>
           </q-input>
 
-          <q-btn icon="login" label="Entrar" type="submit" color="primary" />
-          <router-link to="/register">
-            <div>
-              <q-icon name="list" size="2rem" />
-              <div class="text-body1 text-thin">Registrar-se</div>
-            </div>
-          </router-link>
+          <q-btn label="Criar conta" type="submit" color="primary" />
         </div>
       </q-form>
-
-      <hr />
-
-      <div class="actions q-pa-md">
-        <div class="text-h6 text-bold">Ações</div>
-        <router-link to="/congressperson/list">
-          <div class="action-card">
-            <q-icon name="list" size="2rem" />
-            <div class="text-body1 text-thin">Listar Deputados</div>
-          </div>
-        </router-link>
-      </div>
     </div>
   </q-page>
 </template>
@@ -72,10 +54,10 @@ const isPwd = ref(true);
 async function onSubmit() {
     
   try {
-    await useAuthUser().login(username.value, password.value)
-    notify.notifySuccess('Login bem sucedido!')
+    await useAuthUser().register(username.value, password.value)
+    notify.notifySuccess(`Conta ${username.value} criada com sucesso`)
   } catch (error) {
-    notify.notifyError('Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?')
+    notify.notifyError('Não foi possível criar uma conta')
   }
 }
 

@@ -1,3 +1,4 @@
+<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
 <template>
   <q-page>
     <!-- Fixar no topo -->
@@ -121,6 +122,14 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import { api } from 'boot/axios';
+import { useNotify } from 'src/composables/useNotify';
+import { useFavorites } from 'src/composables/useFavorites';
+import { useAuthUser } from 'src/composables/useAuthUser';
+import { CongressPerson } from 'src/core/CongressPersonInterface';
+
+const notify = useNotify()
+const favorites = useFavorites()
+const authUser = useAuthUser()
 
 const showModal = ref(false);
 
@@ -161,8 +170,38 @@ const ufOptions = [
 const genderOptions = ['F', 'M'];
 
 // TODO: alterar tipo do item baseado no tipo correto
-function toggleFavorite(item: unknown) {
-  console.log(item);
+async function toggleFavorite(congressPerson: CongressPerson & { favorite: boolean }) {
+
+  if (authUser.isUnauthenticated()) {
+    notify.notifyError('Você precisa estar logado para favoritar esse deputado')
+    return
+  }
+
+  try {
+    const userId: string | undefined = authUser?.user?.value?.id
+
+    if (congressPerson.favorite) {
+      await favorites.addFavorite(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        userId!,
+        congressPerson.id,
+        congressPerson.urlFoto,
+        congressPerson.nome,
+        congressPerson.siglaPartido,
+      );
+      notify.notifySuccess(`Deputado ${congressPerson.nome} favoritado com sucesso!`)
+      
+    } else {
+      await favorites.deleteFavorite(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        userId!,
+        congressPerson.id,
+      );
+      notify.notifySuccess(`Deputado ${congressPerson.nome} desfavoritado com sucesso!`);
+    }
+  } catch (_) {
+    notify.notifyError('Não foi possível realizar essa ação')
+  }
 }
 const loadingSearchState = ref(false);
 
@@ -182,7 +221,12 @@ async function fetchCongressPersonList(params: Record<string, string | undefined
     if (!response.data.dados) {
       throw new Error('Dados não encontrados');
     }
-    congressPersonListFiltered.value = response.data.dados;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    congressPersonListFiltered.value = response.data.dados.map((item: CongressPerson) => {
+      return {
+        ...item, favorite: false
+      }
+    });
     loadingSearchState.value = false;
     showModal.value = false;
   } catch (error) {
