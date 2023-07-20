@@ -123,9 +123,17 @@
     </q-item>
     <!-- FIXME: justify-center é apenas no mobile, breakpoint n ta workando (justify-md-center)-->
     <q-item class="justify-center">
-      <q-btn @click="openURL(`${camaraURL}/${congressPersonData.id}`)"
+      <q-btn
+        @click="openURL(`${camaraURL}/${congressPersonData.id}`)"
         color="primary"
         >Ver mais no site oficial da Câmara</q-btn
+      >
+    </q-item>
+    <q-item class="justify-center">
+      <q-btn
+        @click="$router.push(`/congressperson/expenses/${congressPersonData.id}`)"
+        color="primary"
+        >visualizar cotas parlamentares</q-btn
       >
     </q-item>
   </q-page>
@@ -135,7 +143,7 @@
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
-import { Dados } from '../models/congressPerson';
+import { Dados } from 'models/congressPerson';
 import { openURL } from 'quasar';
 
 const router = useRouter();
@@ -155,7 +163,6 @@ onMounted(async () => {
   const congressPersonDataId = router.currentRoute.value.params.id;
   try {
     const response = await api.get(`/deputados/${congressPersonDataId}`);
-    console.log(response.data.dados);
     congressPersonData.value = response.data.dados;
   } catch (error) {
     console.error(error);
