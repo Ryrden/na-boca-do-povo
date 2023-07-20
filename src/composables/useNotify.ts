@@ -4,7 +4,7 @@ import { QNotifyOptions } from 'quasar'
 function useNotify () {
   const $q = useQuasar()
 
-  const notifySuccess = (message = 'Sucesso!', displayDurationInMiliseconds = 100): void => {
+  const notifySuccess = (message = 'Sucesso!', displayDurationInMiliseconds = 200): void => {
     const options: QNotifyOptions = {
       type: 'positive',
       message: message,
@@ -14,7 +14,7 @@ function useNotify () {
     $q.notify(options)
   }
 
-  const notifyError = (message = 'Algo de errado ocorreu, tente novamente mais tarde...', displayDurationInMiliseconds = 100): void => {
+  const notifyError = (message = 'Algo de errado ocorreu, tente novamente mais tarde...', displayDurationInMiliseconds = 200): void => {
     const options: QNotifyOptions = {
       type: 'negative',
       message: message,
