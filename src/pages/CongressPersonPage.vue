@@ -1,10 +1,10 @@
 <template>
-  <q-page v-if="congressPerson">
+  <q-page v-if="congressPersonData">
     <q-item class="row">
       <q-img
-        v-if="congressPerson.ultimoStatus.urlFoto"
-        :key="congressPerson.id"
-        :src="congressPerson.ultimoStatus.urlFoto"
+        v-if="congressPersonData.ultimoStatus?.urlFoto"
+        :key="congressPersonData.id"
+        :src="congressPersonData.ultimoStatus?.urlFoto"
         spinner-color="blue"
         fit="contain"
         width="5rem"
@@ -13,28 +13,28 @@
       />
       <q-icon v-else name="person" size="10rem" />
       <q-item-section>
-        <div class="text-h5">{{ congressPerson.ultimoStatus.nome }}</div>
+        <div class="text-h5">{{ congressPersonData.ultimoStatus?.nome }}</div>
         <div caption class="text-subtitle1">
-          {{ congressPerson.ultimoStatus.siglaPartido }}
+          {{ congressPersonData.ultimoStatus?.siglaPartido }}
         </div>
         <!-- Titular em exercicion -->
         <div caption class="text-subtitle1">
           <q-icon
             :name="
-              congressPerson.ultimoStatus.situacao === 'Exercício'
+              congressPersonData.ultimoStatus?.situacao === 'Exercício'
                 ? 'check_circle'
                 : 'cancel'
             "
             :color="
-              congressPerson.ultimoStatus.situacao === 'Exercício'
+              congressPersonData.ultimoStatus?.situacao === 'Exercício'
                 ? 'green'
                 : 'red'
             "
           />
           {{
-            congressPerson.ultimoStatus.situacao === 'Exercício'
+            congressPersonData.ultimoStatus?.situacao === 'Exercício'
               ? 'Titular em exercício'
-              : `Fora do exercício do mandato: ${congressPerson.ultimoStatus.situacao}`
+              : `Fora do exercício do mandato: ${congressPersonData.ultimoStatus?.situacao}`
           }}
         </div>
       </q-item-section>
@@ -46,12 +46,15 @@
         <q-item-label class="text-subtitle1">
           <q-icon name="phone" size="2rem" color="primary" alt="Telefone" />
           <!-- TODO: Adicionar DDD (XX) XXXX-XXXX -->
-          {{ congressPerson.ultimoStatus.gabinete.telefone || 'Não informado' }}
+          {{
+            congressPersonData.ultimoStatus?.gabinete.telefone ||
+            'Não informado'
+          }}
         </q-item-label>
         <!-- Email -->
         <q-item-label class="text-subtitle1">
           <q-icon name="email" size="2rem" color="primary" alt="Email" />
-          {{ congressPerson.ultimoStatus.email || 'Não informado' }}
+          {{ congressPersonData.ultimoStatus?.email || 'Não informado' }}
         </q-item-label>
         <!-- Gabinete (endereço) -->
         <q-item-label class="text-subtitle1">
@@ -62,9 +65,13 @@
             alt="Informações do gabinete"
           />
           Gabinete:
-          {{ congressPerson.ultimoStatus.gabinete.predio || 'Não informado' }}
+          {{
+            congressPersonData.ultimoStatus?.gabinete.predio || 'Não informado'
+          }}
           - Anexo:
-          {{ congressPerson.ultimoStatus.gabinete.sala || 'Não informado' }}
+          {{
+            congressPersonData.ultimoStatus?.gabinete.sala || 'Não informado'
+          }}
         </q-item-label>
         <!-- Data de nascimento -->
         <q-item-label class="text-subtitle1">
@@ -75,7 +82,7 @@
             alt="Data de nascimento"
           />
           <!-- TODO: Mudar formato para DD/MM/AAAA -->
-          {{ congressPerson.dataNascimento || 'Não informado' }}
+          {{ congressPersonData.dataNascimento || 'Não informado' }}
         </q-item-label>
         <!-- Escolaridade -->
         <q-item-label class="text-subtitle1">
@@ -85,9 +92,41 @@
             color="primary"
             alt="Nível de Escolaridade"
           />
-          {{ congressPerson.escolaridade || 'Não informado' }}
+          {{ congressPersonData.escolaridade || 'Não informado' }}
         </q-item-label>
       </q-item-section>
+    </q-item>
+    <q-item v-if="congressPersonData.redeSocial?.length">
+      <q-item-section class="row">
+        <div class="text-h6">Redes Sociais</div>
+        <!-- https://<redesocialNome>.com.br/<algumacoisa[Opcional]>/<arroba> -->
+        <!-- create a clickable link -->
+        <q-item-label
+          v-for="social in congressPersonData.redeSocial"
+          @click="openURL(social)"
+          clickable
+          :key="social"
+          class="text-subtitle1"
+        >
+          <q-icon
+            :name="`mdi-${socialMedias.find((socialMedia) =>
+              social.includes(socialMedia)
+            )}`"
+            size="2rem"
+            color="primary"
+            alt="Rede Social"
+          />
+          <!-- TODO: add underline to know that this is clickable -->
+          Link: {{ social }}
+        </q-item-label>
+      </q-item-section>
+    </q-item>
+    <!-- FIXME: justify-center é apenas no mobile, breakpoint n ta workando (justify-md-center)-->
+    <q-item class="justify-center">
+      <q-btn @click="openURL(`${camaraURL}/${congressPersonData.id}`)"
+        color="primary"
+        >Ver mais no site oficial da Câmara</q-btn
+      >
     </q-item>
   </q-page>
 </template>
@@ -96,16 +135,28 @@
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
+import { Dados } from '../models/congressPerson';
+import { openURL } from 'quasar';
 
 const router = useRouter();
 
-const congressPerson = ref<any>(null);
+const socialMedias = [
+  'facebook',
+  'twitter',
+  'instagram',
+  'youtube',
+  'linkedin',
+];
+
+const congressPersonData = ref<Partial<Dados>>({});
+const camaraURL = 'https://www.camara.leg.br/deputados';
 
 onMounted(async () => {
-  const congressPersonId = router.currentRoute.value.params.id;
+  const congressPersonDataId = router.currentRoute.value.params.id;
   try {
-    const response = await api.get(`/deputados/${congressPersonId}`);
-    congressPerson.value = response.data.dados;
+    const response = await api.get(`/deputados/${congressPersonDataId}`);
+    console.log(response.data.dados);
+    congressPersonData.value = response.data.dados;
   } catch (error) {
     console.error(error);
   }
