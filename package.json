@@ -1,9 +1,9 @@
 {
   "name": "quasar-project",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Quasar App",
-  "author": "Ryan S <ryansouza@usp.br>",
+  "description": "Uma plataforma interativa de visualização de dados pessoais de políticos brasileiros. Nosso objetivo é fornecer aos cidadãos brasileiros uma ferramenta poderosa e transparente para acompanhar seus representantes políticos, ajudando-os a tomar decisões informadas durante o processo democrático. Acreditamos que o acesso fácil a essas informações é fundamental para fortalecer a participação cívica e a consciência política em nossa sociedade.",
+  "productName": "Na Boca do Povo",
+  "author": "João L Pereira <j.lucaspereira@usp.br> | Joel F Coelho <joelcoelho@usp.br> | Ryan S <ryansouza@usp.br>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",

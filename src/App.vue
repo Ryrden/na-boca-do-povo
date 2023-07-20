@@ -1,7 +1,14 @@
 <template>
-  <router-view />
+  <div class="render">
+    <router-view />
+  </div>
 </template>
 
-<script setup lang="ts">
+<style>
+.render {
+  margin: auto;
+  max-width: 1080px;
+}
+</style>
 
-</script>
+<script setup lang="ts"></script>

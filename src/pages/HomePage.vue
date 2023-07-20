@@ -1,20 +1,33 @@
 <template>
   <q-page>
-    <div>
-      <!-- TODO: Criar logo -->
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-        <div class="q-pa-md">
+    <div class="text-center">
+      <q-img
+        src="src/assets/logo.png"
+        alt="Logo oficial Na Boca do Povo"
+        no-spinner
+        loading="eager"
+        width="20rem"
+      />
+
+      <q-form @submit="onSubmit" @reset="onReset">
+        <div class="q-pa-md forms">
           <q-input
-            square
             filled
             v-model="username"
-            label="Usuário"
+            type="email"
+            label="E-mail"
             lazy-rules
             :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, digite seu nome',
+              (val) =>
+                (val && val.length > 0) || 'Por favor, digite seu e-mail.',
             ]"
-          />
+          >
+            <template v-slot:prepend>
+              <q-icon name="email" />
+            </template>
+          </q-input>
           <q-input
+            class="q-field-native"
             v-model="password"
             filled
             :type="isPwd ? 'password' : 'text'"
@@ -24,6 +37,9 @@
               (val) => (val && val.length > 0) || 'Por favor, digite sua senha',
             ]"
           >
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
             <template v-slot:append>
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -33,27 +49,26 @@
             </template>
           </q-input>
 
-          <q-btn icon="login" label="Entrar" type="submit" color="primary" />
+          <q-btn
+            icon="login"
+            label="Entrar"
+            type="submit"
+            color="primary"
+            class="main-btn"
+          />
+
           <router-link to="/register">
-            <div>
-              <q-icon name="list" size="2rem" />
-              <div class="text-body1 text-thin">Registrar-se</div>
-            </div>
+            <q-btn
+              outline
+              icon="how_to_reg"
+              label="Registrar-se"
+              type="reset"
+              color="primary"
+              class="main-btn"
+            />
           </router-link>
         </div>
       </q-form>
-
-      <hr />
-
-      <div class="actions q-pa-md">
-        <div class="text-h6 text-bold">Ações</div>
-        <router-link to="/congressperson/list">
-          <div class="action-card">
-            <q-icon name="list" size="2rem" />
-            <div class="text-body1 text-thin">Listar Deputados</div>
-          </div>
-        </router-link>
-      </div>
     </div>
   </q-page>
 </template>
@@ -63,19 +78,20 @@ import { ref } from 'vue';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
 
-const notify = useNotify()
+const notify = useNotify();
 
 const username = ref('');
 const password = ref('');
 const isPwd = ref(true);
 
 async function onSubmit() {
-    
   try {
-    await useAuthUser().login(username.value, password.value)
-    notify.notifySuccess('Login bem sucedido!')
+    await useAuthUser().login(username.value, password.value);
+    notify.notifySuccess('Login bem sucedido!');
   } catch (error) {
-    notify.notifyError('Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?')
+    notify.notifyError(
+      'Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?'
+    );
   }
 }
 
@@ -85,11 +101,12 @@ function onReset() {
 }
 </script>
 
-<style lang="sass" scoped>
-
-.actions
-  .action-card
-    width: 100%
-    max-width: 10rem
-    text-align: center
+<style lang="scss" scoped>
+.forms {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+}
 </style>
