@@ -9,6 +9,7 @@ function useNotify () {
       type: 'positive',
       message: message,
       timeout: displayDurationInMiliseconds,
+      position: 'top',
     }
     $q.notify(options)
   }
@@ -18,6 +19,7 @@ function useNotify () {
       type: 'negative',
       message: message,
       timeout: displayDurationInMiliseconds,
+      position: 'top',
     }
     $q.notify(options)
   }
