@@ -1,4 +1,3 @@
-<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
 <template>
   <q-page>
     <div class="q-pa-md row justify-between w-90">
@@ -33,24 +32,23 @@
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
-        <!-- FIXME: Nome da opção selecionada não aparece  -->
         <q-card-section>
           <q-select
-            v-model="specificFilter.siglaPartido"
+            v-model="siglaPartido"
             :options="entourageOptions"
             label="Sigla Partido"
             clearable
             :disable="loadingSearchState"
-            />
-            <q-select
-            v-model="specificFilter.siglaUf"
+          />
+          <q-select
+            v-model="siglaUf"
             :options="ufOptions"
             label="Sigla UF"
             clearable
             :disable="loadingSearchState"
-            />
-            <q-select
-            v-model="specificFilter.sexo"
+          />
+          <q-select
+            v-model="siglaSexo"
             :options="genderOptions"
             label="Sigla Sexo"
             clearable
@@ -144,6 +142,13 @@ const authUser = useAuthUser();
 
 const showModal = ref(false);
 
+const loadingSearchState = ref(false);
+
+const search = ref('');
+const siglaPartido = ref('');
+const siglaUf = ref('');
+const siglaSexo = ref('');
+
 const congressPersonListFiltered = ref([]);
 
 // Filtros
@@ -221,16 +226,6 @@ async function toggleFavorite(
     notify.notifyError('Não foi possível realizar essa ação');
   }
 }
-const loadingSearchState = ref(false);
-
-interface CongressPersonFilter {
-  siglaPartido: string;
-  siglaUf: string;
-  sexo: string;
-}
-
-const search = ref('');
-const specificFilter: Partial<CongressPersonFilter> = {};
 
 async function fetchCongressPersonList(
   params: Record<string, string | undefined>
@@ -239,7 +234,7 @@ async function fetchCongressPersonList(
   let favoritesList: Favorite[] = [];
 
   // REVIEW: Esse código comentado é a futura refatoração do código abaixo
-  
+
   //const userId = authUser.user.value?.id ?? '';
   // try{
   //   favoritesList = await favorites.fetchFavorites(userId);
@@ -323,17 +318,17 @@ async function getFilteredCongressPersonList() {
     ordem: 'ASC',
     ordenarPor: 'nome',
     nome: search.value,
-    siglaPartido: specificFilter.siglaPartido ?? '',
-    siglaUf: specificFilter.siglaUf ?? '',
-    siglaSexo: specificFilter.sexo ?? '',
+    siglaPartido: siglaPartido.value ?? '',
+    siglaUf: siglaUf.value ?? '',
+    siglaSexo: siglaSexo.value ?? '',
   };
   await fetchCongressPersonList(params);
 }
 
 async function clearFiltersAndCloseModal() {
-  specificFilter.siglaPartido = '';
-  specificFilter.siglaUf = '';
-  specificFilter.sexo = '';
+  siglaPartido.value = '';
+  siglaUf.value = '';
+  siglaSexo.value = '';
   await fetchCongressPersonList(params);
 }
 
@@ -341,9 +336,9 @@ const params = {
   ordem: 'ASC',
   ordenarPor: 'nome',
   nome: search.value,
-  siglaPartido: specificFilter.siglaPartido ?? '',
-  siglaUf: specificFilter.siglaUf ?? '',
-  siglaSexo: specificFilter.sexo ?? '',
+  siglaPartido: siglaPartido.value ?? '',
+  siglaUf: siglaUf.value ?? '',
+  siglaSexo: siglaSexo.value ?? '',
 };
 
 watch(search, getFilteredCongressPersonList);
