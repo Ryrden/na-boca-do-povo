@@ -74,11 +74,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
+import { useRouter } from 'vue-router';
+import { User } from '@supabase/supabase-js';
 
 const notify = useNotify();
+const useAuth = useAuthUser();
+const router = useRouter();
 
 const username = ref('');
 const password = ref('');
@@ -86,8 +90,9 @@ const isPwd = ref(true);
 
 async function onSubmit() {
   try {
-    await useAuthUser().login(username.value, password.value);
+    await useAuth.login(username.value, password.value);
     notify.notifySuccess('Login bem sucedido!');
+    onLoggedIn()
   } catch (error) {
     notify.notifyError(
       'Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?'
@@ -99,6 +104,30 @@ function onReset() {
   username.value = '';
   password.value = '';
 }
+
+function onLoggedIn() {
+  router.push('/congressperson/list');
+}
+
+onMounted(async () => {
+  if (useAuth.isLoggedIn()) {
+    const user = useAuth?.user;
+
+    username.value = user?.value?.email || ''
+    password.value = 'XXXXXXXXX'
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        notify.notifySuccess('Você já está logado, caso quiser deslogar, vá até a tela de configurações');
+        onLoggedIn();
+        onReset();
+        resolve();
+      }, 2000)
+    });
+  }
+});
+
 </script>
 
 <style lang="scss" scoped>
