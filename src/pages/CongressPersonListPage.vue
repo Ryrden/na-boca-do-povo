@@ -119,7 +119,7 @@
         </q-item>
       </q-virtual-scroll>
 
-      <q-item v-else>
+      <q-item v-else class="text-center">
         <q-item-section>
           <q-item-label class="text-h6"
             >Nenhum resultado encontrado</q-item-label
@@ -149,36 +149,36 @@ const congressPersonListFiltered = ref([]);
 // Filtros
 const entourageOptions = ref([]);
 const ufOptions = [
-  'AC - Acre',
-  'AL - Alagoas',
-  'AM - Amazonas',
-  'AP - Amapá',
-  'BA - Bahia',
-  'CE - Ceará',
-  'DF - Distrito Federal',
-  'ES - Espírito Santo',
-  'GO - Goiás',
-  'MA - Maranhão',
-  'MG - Minas Gerais',
-  'MS - Mato Grosso do Sul',
-  'MT - Mato Grosso',
-  'PA - Pará',
-  'PB - Paraíba',
-  'PE - Pernambuco',
-  'PI - Piauí',
-  'PR - Paraná',
-  'RJ - Rio de Janeiro',
-  'RN - Rio Grande do Norte',
-  'RO - Rondônia',
-  'RR - Roraima',
-  'RS - Rio Grande do Sul',
-  'SC - Santa Catarina',
-  'SE - Sergipe',
-  'SP - São Paulo',
-  'TO - Tocantins',
+  'AC',
+  'AL',
+  'AM',
+  'AP',
+  'BA',
+  'CE',
+  'DF',
+  'ES',
+  'GO',
+  'MA',
+  'MG',
+  'MS',
+  'MT',
+  'PA',
+  'PB',
+  'PE',
+  'PI',
+  'PR',
+  'RJ',
+  'RN',
+  'RO',
+  'RR',
+  'RS',
+  'SC',
+  'SE',
+  'SP',
+  'TO',
 ];
 
-const genderOptions = ['F - Feminino', 'M - Masculino'];
+const genderOptions = ['F', 'M'];
 
 async function toggleFavorite(
   congressPerson: CongressPerson & { favorite: boolean }
@@ -311,7 +311,7 @@ async function fetchEntourageList() {
     }
 
     entourageOptions.value = response.data.dados.map(
-      ({ sigla, nome }: { sigla: string; nome: string }) => sigla + ' - ' + nome
+      ({ sigla }: { sigla: string }) => sigla
     );
   } catch (error) {
     console.error(error);
@@ -359,13 +359,5 @@ onMounted(async () => {
 .w-90 {
   padding: 1rem 2rem;
   margin: auto;
-}
-
-.input-field {
-  width: 80%;
-}
-
-.filter-btn {
-  width: 15%;
 }
 </style>

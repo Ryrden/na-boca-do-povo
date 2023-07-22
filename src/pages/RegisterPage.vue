@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="text-center">
-      <h3 class="text-h3">
+      <h3 class="text-h4">
         <q-icon name="how_to_reg" />
         Registrar-se
       </h3>
@@ -88,6 +88,7 @@
 import { ref } from 'vue';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
+import { useRouter } from 'vue-router';
 
 const notify = useNotify();
 
@@ -105,6 +106,10 @@ async function onSubmit() {
 
     await useAuthUser().register(username.value, password.value);
     notify.notifySuccess(`Conta ${username.value} criada com sucesso`);
+
+    // TODO: FIX THIS
+    const router = useRouter();
+    router.push({ name: 'login' });
   } catch (error) {
     notify.notifyError(String(error));
   }

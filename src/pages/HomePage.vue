@@ -64,7 +64,7 @@
               label="Registrar-se"
               type="reset"
               color="primary"
-              class="main-btn"
+              class="main-btn router-link"
             />
           </router-link>
         </div>
@@ -92,7 +92,7 @@ async function onSubmit() {
   try {
     await useAuth.login(username.value, password.value);
     notify.notifySuccess('Login bem sucedido!');
-    onLoggedIn()
+    onLoggedIn();
   } catch (error) {
     notify.notifyError(String(error));
   }
@@ -111,21 +111,22 @@ onMounted(async () => {
   if (useAuth.isLoggedIn()) {
     const user = useAuth?.user;
 
-    username.value = user?.value?.email || ''
-    password.value = 'XXXXXXXXX'
+    username.value = user?.value?.email || '';
+    password.value = 'XXXXXXXXX';
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        notify.notifySuccess('Você já está logado, caso quiser deslogar, vá até a tela de configurações');
+        notify.notifySuccess(
+          'Você já está logado, caso quiser deslogar, vá até a tela de configurações'
+        );
         onLoggedIn();
         onReset();
         resolve();
-      }, 2000)
+      }, 2000);
     });
   }
 });
-
 </script>
 
 <style lang="scss" scoped>
