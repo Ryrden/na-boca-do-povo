@@ -1,12 +1,12 @@
 <template>
   <q-virtual-scroll
-  v-if="CongressPersonExpensesData.dados"
+    v-if="CongressPersonExpensesData.dados"
     :items="CongressPersonExpensesData.dados"
     separator
     virtual-scroll-slice-size="10"
-    v-slot="{ item }"
+    v-slot="{ item, index }"
   >
-    <q-item :key="item.codDocumento" class="row items-center justify-between">
+    <q-item :key="item.codDocumento + Math.random() + index" class="row items-center justify-between">
       <!-- Adicione aqui os campos que deseja exibir do objeto "RegistroCota" -->
       <q-item-section class="q-px-md">
         <q-item-label class="text-body1"
@@ -14,9 +14,9 @@
         >
         <q-item-label class="text-body1"
           >Tipo: {{ item.tipoDespesa }}</q-item-label
-          >
+        >
         <q-item-label class="text-body1"
-        >Valor: R$ {{ item.valorLiquido }}</q-item-label
+          >Valor: R$ {{ item.valorLiquido }}</q-item-label
         >
         <!-- Adicione outros campos aqui conforme necessário -->
       </q-item-section>
@@ -32,7 +32,13 @@
     <!-- FIXME: Melhorar a navegação e tirar warning do typescript -->
     <q-item-section>
       <q-btn
-        @click="refreshData(CongressPersonExpensesData.links[0].href)"
+        @click="
+          refreshData(
+            CongressPersonExpensesData.links.find(
+              (link) => link.rel === 'first'
+            )?.href || ''
+          )
+        "
         color="primary"
         icon="first_page"
         :disable="loadingData"
@@ -40,7 +46,11 @@
     </q-item-section>
     <q-item-section>
       <q-btn
-        @click="refreshData(CongressPersonExpensesData.links[1].href)"
+        @click="refreshData(
+            CongressPersonExpensesData.links.find(
+              (link) => link.rel === 'previous'
+            )?.href || ''
+          )"
         color="primary"
         icon="arrow_back"
         :disable="loadingData"
@@ -48,7 +58,11 @@
     </q-item-section>
     <q-item-section>
       <q-btn
-        @click="refreshData(CongressPersonExpensesData.links[2].href)"
+        @click="refreshData(
+            CongressPersonExpensesData.links.find(
+              (link) => link.rel === 'next'
+            )?.href || ''
+          )"
         color="primary"
         icon-right="arrow_forward"
         :disable="loadingData"
@@ -56,7 +70,11 @@
     </q-item-section>
     <q-item-section class="q-ma">
       <q-btn
-        @click="refreshData(CongressPersonExpensesData.links[3].href)"
+        @click="refreshData(
+            CongressPersonExpensesData.links.find(
+              (link) => link.rel === 'last'
+            )?.href || ''
+          )"
         color="primary"
         icon-right="last_page"
         :disable="loadingData"
@@ -77,25 +95,25 @@ const router = useRouter();
 
 const loadingData = ref(false);
 
-function refreshData(url: string) {
-  console.log(url)
-  loadingData.value = true;
-  api
-    .get(url, {
-      params: {
-        ordem: 'ASC',
-        ordenarPor: 'ano',
-      },
-    })
-    .then((response) => {
-      CongressPersonExpensesData.value = response.data;
-      loadingData.value = false;
-    });
+async function refreshData(url: string) {
+  try {
+    loadingData.value = true;
+    if (url === '') throw new Error('Não há mais registros');
+
+    const response = await api.get(url);
+    CongressPersonExpensesData.value = response.data;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingData.value = false;
+  }
 }
 
 onMounted(async () => {
-  const congressPersonDataId = router.currentRoute.value.params.id;
   try {
+    const congressPersonDataId = router.currentRoute.value.params.id;
+    //TODO: tratar vulnerabilidades de segurança
+    loadingData.value = true;
     const response = await api.get(
       `/deputados/${congressPersonDataId}/despesas`,
       {
@@ -105,10 +123,11 @@ onMounted(async () => {
         },
       }
     );
-    console.log(response.data.links);
     CongressPersonExpensesData.value = response.data;
   } catch (error) {
     console.error(error);
+  } finally {
+    loadingData.value = false;
   }
 });
 </script>
