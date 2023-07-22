@@ -8,7 +8,7 @@ interface useAuthUserType {
   logout: () => Promise<void>;
   isLoggedIn: () => boolean;
   isUnauthenticated: () => boolean;
-  register: (email: string, password: string) => Promise<User | null>;
+  register: (email: string, password: string) => Promise<void>;
   update: (data: Partial<User>) => Promise<User | null>;
 }
 
@@ -67,7 +67,8 @@ function useAuthUser(): useAuthUserType {
   const register = async (
     email: string,
     password: string
-  ): Promise<User | null> => {
+  ): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { data, error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
@@ -84,10 +85,6 @@ function useAuthUser(): useAuthUserType {
           throw new Error('Serviço indisponível, tente novamente mais tarde.');
       }
     }
-
-    user.value = data.user;
-
-    return user.value;
   };
 
   /**
