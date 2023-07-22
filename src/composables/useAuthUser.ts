@@ -25,7 +25,17 @@ function useAuthUser(): useAuthUserType {
       email,
       password,
     });
-    if (error) throw error;
+    if (error) {
+      switch (error.status) {
+        case 400:
+          throw new Error(
+            'E-mail ou senha incorretos. Caso não tenha uma conta, por favor, registre-se.'
+          );
+
+        default:
+          throw new Error('Serviço indisponível, tente novamente mais tarde.');
+      }
+    }
 
     user.value = data.user;
 
@@ -58,11 +68,22 @@ function useAuthUser(): useAuthUserType {
     email: string,
     password: string
   ): Promise<User | null> => {
-    console.log(email);
-    console.log(password);
     const { data, error } = await supabase.auth.signUp({ email, password });
-    console.log(error);
-    if (error) throw error;
+
+    if (error) {
+      switch (error.status) {
+        case 400:
+          throw new Error(
+            'Email já cadastrado, por favor, tente um e-mail diferente.'
+          );
+
+        case 422:
+          throw new Error('A senha deve conter no mínimo 6 caracteres.');
+
+        default:
+          throw new Error('Serviço indisponível, tente novamente mais tarde.');
+      }
+    }
 
     user.value = data.user;
 

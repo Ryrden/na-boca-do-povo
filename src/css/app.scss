@@ -1,6 +1,23 @@
 // app global css in SCSS form
 /* src/css/app.scss */
 
+/* Default */
+.router-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+primary-title {
+  color: $secondary;
+}
+
+/* Components */
+
+// Notify
 .q-notification {
   font-size: 1rem;
   text-align: center;
@@ -14,9 +31,23 @@
   font-size: 1.2rem;
 }
 
+// Button
 .main-btn {
   width: 100%;
   height: 3rem;
   border-radius: 10px;
   margin-top: 1rem;
+}
+
+// Input
+.q-field__native,
+.q-field__control {
+  color: $secondary;
+}
+
+// Chip
+.chip {
+  background-color: $secondary;
+  color: $accent;
+  border-radius: 10px;
 }

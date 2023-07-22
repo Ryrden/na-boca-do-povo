@@ -1,6 +1,11 @@
 <template>
   <q-page>
-    <div>
+    <div class="text-center">
+      <h3 class="text-h3">
+        <q-icon name="how_to_reg" />
+        Registrar-se
+      </h3>
+
       <q-form @submit="onSubmit" @reset="onReset">
         <div class="q-pa-md forms">
           <q-input
@@ -26,6 +31,9 @@
             lazy-rules
             :rules="[
               (val) => (val && val.length > 0) || 'Este campo é obrigatório!',
+              (val) =>
+                (val && val.length >= 6) ||
+                'A senha deve conter no mínimo 6 caracteres',
             ]"
           >
             <template v-slot:prepend>
@@ -63,39 +71,6 @@
             </template>
           </q-input>
 
-          <q-input
-            v-model="dateOfBirth"
-            filled
-            type="date"
-            label="Data de Nascimento"
-          >
-            <template v-slot:prepend>
-              <q-icon name="event" />
-            </template>
-          </q-input>
-
-          <q-input
-            filled
-            bottom-slots
-            v-model="address"
-            type="text"
-            label="Endereço"
-            counter
-          >
-            <template v-slot:prepend>
-              <q-icon name="place" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                name="close"
-                @click="address = ''"
-                class="cursor-pointer"
-              />
-            </template>
-
-            <template v-slot:hint> Contador de caracteres </template>
-          </q-input>
-
           <q-btn
             icon="how_to_reg"
             label="Criar conta"
@@ -119,8 +94,6 @@ const notify = useNotify();
 const username = ref('');
 const password = ref('');
 const confirmPassword = ref('');
-const dateOfBirth = ref('');
-const address = ref('');
 const isPwd = ref(true);
 
 async function onSubmit() {
@@ -133,7 +106,7 @@ async function onSubmit() {
     await useAuthUser().register(username.value, password.value);
     notify.notifySuccess(`Conta ${username.value} criada com sucesso`);
   } catch (error) {
-    notify.notifyError('Não foi possível criar uma conta');
+    notify.notifyError(String(error));
   }
 }
 

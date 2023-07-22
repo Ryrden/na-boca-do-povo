@@ -6,18 +6,30 @@
     virtual-scroll-slice-size="10"
     v-slot="{ item, index }"
   >
-    <q-item :key="item.codDocumento + Math.random() + index" class="row items-center justify-between">
+    <q-item
+      :key="item.codDocumento + Math.random() + index"
+      class="row items-center justify-between"
+    >
       <!-- Adicione aqui os campos que deseja exibir do objeto "RegistroCota" -->
       <q-item-section class="q-px-md">
         <q-item-label class="text-body1"
-          >Data: Mês: {{ item.mes }} - Ano: {{ item.ano }}</q-item-label
-        >
+          ><span>Data:</span>
+          <q-chip>
+            {{ dataFormat(item.dataDocumento) }}
+          </q-chip>
+        </q-item-label>
         <q-item-label class="text-body1"
-          >Tipo: {{ item.tipoDespesa }}</q-item-label
-        >
+          ><span>Tipo:</span>
+          <q-chip color="secondary" text-color="white">
+            {{ item.tipoDespesa }}
+          </q-chip>
+        </q-item-label>
         <q-item-label class="text-body1"
-          >Valor: R$ {{ item.valorLiquido }}</q-item-label
-        >
+          ><span>Valor:</span>
+          <q-chip color="primary" text-color="white"
+            >{{ currencyFormat(item.valorLiquido) }}
+          </q-chip>
+        </q-item-label>
         <!-- Adicione outros campos aqui conforme necessário -->
       </q-item-section>
     </q-item>
@@ -27,9 +39,7 @@
       <q-item-label class="text-h6">Nenhum resultado encontrado</q-item-label>
     </q-item-section>
   </q-item>
-  <!-- Paginação, voltar, avançar e ultima página -->
   <q-item v-if="CongressPersonExpensesData.links">
-    <!-- FIXME: Melhorar a navegação e tirar warning do typescript -->
     <q-item-section>
       <q-btn
         @click="
@@ -46,11 +56,13 @@
     </q-item-section>
     <q-item-section>
       <q-btn
-        @click="refreshData(
+        @click="
+          refreshData(
             CongressPersonExpensesData.links.find(
               (link) => link.rel === 'previous'
             )?.href || ''
-          )"
+          )
+        "
         color="primary"
         icon="arrow_back"
         :disable="loadingData"
@@ -58,11 +70,12 @@
     </q-item-section>
     <q-item-section>
       <q-btn
-        @click="refreshData(
-            CongressPersonExpensesData.links.find(
-              (link) => link.rel === 'next'
-            )?.href || ''
-          )"
+        @click="
+          refreshData(
+            CongressPersonExpensesData.links.find((link) => link.rel === 'next')
+              ?.href || ''
+          )
+        "
         color="primary"
         icon-right="arrow_forward"
         :disable="loadingData"
@@ -70,11 +83,12 @@
     </q-item-section>
     <q-item-section class="q-ma">
       <q-btn
-        @click="refreshData(
-            CongressPersonExpensesData.links.find(
-              (link) => link.rel === 'last'
-            )?.href || ''
-          )"
+        @click="
+          refreshData(
+            CongressPersonExpensesData.links.find((link) => link.rel === 'last')
+              ?.href || ''
+          )
+        "
         color="primary"
         icon-right="last_page"
         :disable="loadingData"
@@ -87,6 +101,7 @@
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
+import { dataFormat, currencyFormat } from 'src/utils/format';
 import { CongressPersonExpenses } from '../models/congressPersonExpenses';
 
 const CongressPersonExpensesData = ref<Partial<CongressPersonExpenses>>({});

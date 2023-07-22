@@ -8,6 +8,7 @@
 .render {
   margin: auto;
   max-width: 1080px;
+  background-color: #eef4fa;
 }
 </style>
 

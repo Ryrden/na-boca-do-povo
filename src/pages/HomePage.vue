@@ -94,9 +94,7 @@ async function onSubmit() {
     notify.notifySuccess('Login bem sucedido!');
     onLoggedIn()
   } catch (error) {
-    notify.notifyError(
-      'Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?'
-    );
+    notify.notifyError(String(error));
   }
 }
 
