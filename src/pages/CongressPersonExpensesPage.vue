@@ -10,7 +10,6 @@
       :key="item.codDocumento + Math.random() + index"
       class="row items-center justify-between"
     >
-      <!-- Adicione aqui os campos que deseja exibir do objeto "RegistroCota" -->
       <q-item-section class="q-px-md">
         <q-item-label class="text-body1"
           ><span>Data:</span>
@@ -18,6 +17,7 @@
             {{ dataFormat(item.dataDocumento) }}
           </q-chip>
         </q-item-label>
+        <!-- FIXME: em telas menores, o q-chip de tipo quebra a linha e fica ruim, ajustar responsividade -->
         <q-item-label class="text-body1"
           ><span>Tipo:</span>
           <q-chip color="secondary" text-color="white">

@@ -14,3 +14,5 @@ supabase.auth.onAuthStateChange((event, session) => {
 export default function useSupabase () {
   return { supabase }
 }
+// TODO: Usar replicate para replicar os dados do supabase par o pinia quanto houver alterações
+// Isso deve permitr o sincronismo dos dados entre os clientes (offline first)

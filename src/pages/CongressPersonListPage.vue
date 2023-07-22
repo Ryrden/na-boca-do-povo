@@ -24,7 +24,7 @@
         @click="showModal = true"
       />
     </div>
-
+    <!-- TODO: Filtro para componente (modal) -->
     <q-dialog v-model="showModal" full-width>
       <q-card>
         <q-card-section class="row items-center q-pb-none">
@@ -151,7 +151,13 @@ const siglaSexo = ref('');
 
 const congressPersonListFiltered = ref([]);
 
-// Filtros
+// Filtros 
+/* 
+TODO: 
+Passar todos os filtros para um componente, usar "Emit" 
+para passar os valores para o componente pai e usar o "watch" 
+para atualizar a lista de deputados 
+*/
 const entourageOptions = ref([]);
 const ufOptions = [
   'AC',
@@ -230,10 +236,16 @@ async function toggleFavorite(
 async function fetchCongressPersonList(
   params: Record<string, string | undefined>
 ): Promise<void> {
+  // FIXME: arrumar o tipo do userId
   const userId: string | undefined = authUser?.user?.value?.id;
   let favoritesList: Favorite[] = [];
 
-  // REVIEW: Esse código comentado é a futura refatoração do código abaixo
+
+  // TODO: Esse código comentado é a futura refatoração do código abaixo, testar e remover o código abaixo
+  
+  // TODO: Armazenar retorno da API em Cache com Pinia, para evitar requisições desnecessárias ao servidor
+  // NOTE: A busca de dados no pinia é somente feita caso todos os filtros sejam nulos
+  // Caso seja possível armazenar todos os deputados no pinia, a busca de dados no pinia será feita sempre
 
   //const userId = authUser.user.value?.id ?? '';
   // try{
