@@ -34,7 +34,7 @@
           {{
             congressPersonData.ultimoStatus?.situacao === 'Exercício'
               ? 'Titular em exercício'
-              : `Fora do exercício do mandato: ${congressPersonData.ultimoStatus?.situacao}`
+              : `Fora do exercício do mandato: ${congressPersonData.ultimoStatus?.situacao || 'Motivo não informado'}`
           }}
         </div>
       </q-item-section>
@@ -144,8 +144,10 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
 import { Dados } from 'models/congressPerson';
+import { useNotify } from 'src/composables/useNotify';
 import { openURL } from 'quasar';
 
+const notify = useNotify();
 const router = useRouter();
 
 const socialMedias = [
@@ -165,7 +167,7 @@ onMounted(async () => {
     const response = await api.get(`/deputados/${congressPersonDataId}`);
     congressPersonData.value = response.data.dados;
   } catch (error) {
-    console.error(error);
+    notify.notifyError('Não foi possível buscar os detalhes desse deputado');
   }
 });
 </script>

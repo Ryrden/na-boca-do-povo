@@ -1,5 +1,5 @@
 export interface CongressPerson {
-    dados: Dados;
+    dados: Dados[];
     links: Link[];
 }
 

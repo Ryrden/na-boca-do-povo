@@ -1,13 +1,9 @@
 export interface CongressPersonExpenses {
-    dados: Dados;
-    links: Links;
+    dados: Dados[];
+    links: Links[];
 }
 
 export interface Dados {
-    registroCotas: RegistroCota[];
-}
-
-export interface RegistroCota {
     ano:               number;
     mes:               number;
     tipoDespesa:       string;
@@ -33,10 +29,6 @@ export enum TipoDocumento {
 }
 
 export interface Links {
-    link: Link[];
-}
-
-export interface Link {
     rel:  string;
     href: string;
 }
