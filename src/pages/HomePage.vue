@@ -89,9 +89,7 @@ async function onSubmit() {
     await useAuthUser().login(username.value, password.value);
     notify.notifySuccess('Login bem sucedido!');
   } catch (error) {
-    notify.notifyError(
-      'Não foi possível logar com esse usuário, você tem certeza que já possui uma conta?'
-    );
+    notify.notifyError(String(error));
   }
 }
 

@@ -1,6 +1,10 @@
 <template>
-  <q-layout view="hHh LpR fFf">
-    <q-header elevated v-show="router.currentRoute.value.path !== '/'">
+  <q-layout view="hHh LpR fFf" class="navigation">
+    <q-header
+      elevated
+      v-show="router.currentRoute.value.path !== '/'"
+      class="navigation"
+    >
       <q-toolbar>
         <q-btn
           flat
@@ -17,7 +21,7 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer elevated>
+    <q-footer elevated class="navigation">
       <q-tabs v-model="activeTab" align="justify">
         <q-tab name="home" icon="home" @click="navigateTo('/')" />
         <q-tab
@@ -79,3 +83,10 @@ watch(
   }
 );
 </script>
+
+<style>
+.navigation {
+  margin: auto;
+  max-width: 1080px;
+}
+</style>

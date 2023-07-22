@@ -1,6 +1,6 @@
 <template>
   <q-virtual-scroll
-  v-if="CongressPersonExpensesData.dados"
+    v-if="CongressPersonExpensesData.dados"
     :items="CongressPersonExpensesData.dados"
     separator
     virtual-scroll-slice-size="10"
@@ -14,9 +14,9 @@
         >
         <q-item-label class="text-body1"
           >Tipo: {{ item.tipoDespesa }}</q-item-label
-          >
+        >
         <q-item-label class="text-body1"
-        >Valor: R$ {{ item.valorLiquido }}</q-item-label
+          >Valor: R$ {{ item.valorLiquido }}</q-item-label
         >
         <!-- Adicione outros campos aqui conforme necessário -->
       </q-item-section>
@@ -78,7 +78,6 @@ const router = useRouter();
 const loadingData = ref(false);
 
 function refreshData(url: string) {
-  console.log(url)
   loadingData.value = true;
   api
     .get(url, {
