@@ -39,15 +39,17 @@
             v-model="specificFilter.siglaPartido"
             :options="entourageOptions"
             label="Sigla Partido"
+            clearable
             :disable="loadingSearchState"
-          />
-          <q-select
+            />
+            <q-select
             v-model="specificFilter.siglaUf"
             :options="ufOptions"
             label="Sigla UF"
+            clearable
             :disable="loadingSearchState"
-          />
-          <q-select
+            />
+            <q-select
             v-model="specificFilter.sexo"
             :options="genderOptions"
             label="Sigla Sexo"
@@ -234,8 +236,33 @@ async function fetchCongressPersonList(
   params: Record<string, string | undefined>
 ): Promise<void> {
   const userId: string | undefined = authUser?.user?.value?.id;
-
   let favoritesList: Favorite[] = [];
+
+  // REVIEW: Esse código comentado é a futura refatoração do código abaixo
+  
+  //const userId = authUser.user.value?.id ?? '';
+  // try{
+  //   favoritesList = await favorites.fetchFavorites(userId);
+  //   loadingSearchState.value = true;
+  //   const response = await api.get('/deputados', { params });
+  //   if (!response.data.dados) {
+  //     throw new Error('Dados não encontrados');
+  //   }
+
+  //   congressPersonListFiltered.value = response.data.dados.map(
+  //     (item: CongressPerson) => {
+  //       return {
+  //         ...item, favorite: favoritesList.some(
+  //           (favorite) => item.id === favorite.favorite_congress_person_id),
+  //       }
+  //     }
+  //   )
+  // } catch (error) {
+  //   console.error(error);
+  // } finally {
+  //   loadingSearchState.value = false;
+  //   showModal.value = false;
+  // }
 
   // O fetchFavorites não é feito no try só pra ter mais resiliência, pois se caso o usuário não estivesse logado, o mesmo não seria capaz nem de visualizar a listagem dos deputados
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
