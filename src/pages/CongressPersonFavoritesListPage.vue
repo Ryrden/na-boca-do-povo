@@ -41,12 +41,18 @@
         />
       </q-item>
     </q-virtual-scroll>
-    <q-item v-else class="text-center">
-      <q-item-section>
-        <q-item-label class="text-h6"
-          >Você ainda não possui deputados favoritos!</q-item-label
-        >
-      </q-item-section>
+    <q-item v-else class="column">
+      <h6 class="text-h6 primary-title text-center q-mb-md">
+        Você precisa estar logado para adicionar e visualizar seus deputados favoritados!
+      </h6>
+
+      <q-btn
+        filled
+        full-width
+        label="Fazer Login"
+        color="primary main-btn"
+        @click="$router.push('/')"
+      />
     </q-item>
   </q-page>
 </template>
