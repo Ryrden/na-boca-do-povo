@@ -81,8 +81,7 @@
             color="primary"
             alt="Data de nascimento"
           />
-          <!-- TODO: Mudar formato para DD/MM/AAAA -->
-          {{ congressPersonData.dataNascimento || 'Não informado' }}
+          {{ dataFormat(congressPersonData.dataNascimento) || 'Não informado' }}
         </q-item-label>
         <!-- Escolaridade -->
         <q-item-label class="text-subtitle1">
@@ -99,8 +98,6 @@
     <q-item v-if="congressPersonData.redeSocial?.length">
       <q-item-section class="row">
         <div class="text-h6">Redes Sociais</div>
-        <!-- https://<redesocialNome>.com.br/<algumacoisa[Opcional]>/<arroba> -->
-        <!-- create a clickable link -->
         <q-item-label
           v-for="social in congressPersonData.redeSocial"
           @click="openURL(social)"
@@ -117,7 +114,7 @@
             alt="Rede Social"
           />
           <!-- TODO: add underline to know that this is clickable -->
-          Link: {{ social }}
+          {{ urlShortener(social) }}
         </q-item-label>
       </q-item-section>
     </q-item>
@@ -143,7 +140,8 @@
 import { useRouter } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { api } from 'boot/axios';
-import { Dados } from 'models/congressPerson';
+import { dataFormat, urlShortener } from 'src/utils/format';
+import { Dados } from 'src/models/congressPerson';
 import { useNotify } from 'src/composables/useNotify';
 import { openURL } from 'quasar';
 
