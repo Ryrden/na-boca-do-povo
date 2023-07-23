@@ -100,9 +100,10 @@
               style="border-radius: 10%"
             />
             <q-item-section class="q-px-sm">
-              <q-item-label class="text-h6 primary-title">{{
-                item.nome
-              }}</q-item-label>
+              <q-item-label class="text-h6 primary-title"
+                >{{ item.nome }}
+                <!-- TODO: Informar se está em exercicio da profissão aqui também -->
+              </q-item-label>
               <q-item-label caption class="text-caption">
                 <q-chip class="chip">{{ item.siglaPartido }}</q-chip>
               </q-item-label>
@@ -149,9 +150,9 @@ const siglaPartido = ref('');
 const siglaUf = ref('');
 const siglaSexo = ref('');
 
-const congressPersonListFiltered = ref([]);
+const congressPersonListFiltered = ref<CongressPerson[]>([]);
 
-// Filtros 
+// Filtros
 /* 
 TODO: 
 Passar todos os filtros para um componente, usar "Emit" 
@@ -236,74 +237,39 @@ async function toggleFavorite(
 async function fetchCongressPersonList(
   params: Record<string, string | undefined>
 ): Promise<void> {
-  // FIXME: arrumar o tipo do userId
-  const userId: string | undefined = authUser?.user?.value?.id;
+  const userId: string = authUser?.user?.value?.id || '';
   let favoritesList: Favorite[] = [];
 
-
-  // TODO: Esse código comentado é a futura refatoração do código abaixo, testar e remover o código abaixo
-  
-  // TODO: Armazenar retorno da API em Cache com Pinia, para evitar requisições desnecessárias ao servidor
-  // NOTE: A busca de dados no pinia é somente feita caso todos os filtros sejam nulos
-  // Caso seja possível armazenar todos os deputados no pinia, a busca de dados no pinia será feita sempre
-
-  //const userId = authUser.user.value?.id ?? '';
-  // try{
-  //   favoritesList = await favorites.fetchFavorites(userId);
-  //   loadingSearchState.value = true;
-  //   const response = await api.get('/deputados', { params });
-  //   if (!response.data.dados) {
-  //     throw new Error('Dados não encontrados');
-  //   }
-
-  //   congressPersonListFiltered.value = response.data.dados.map(
-  //     (item: CongressPerson) => {
-  //       return {
-  //         ...item, favorite: favoritesList.some(
-  //           (favorite) => item.id === favorite.favorite_congress_person_id),
-  //       }
-  //     }
-  //   )
-  // } catch (error) {
-  //   console.error(error);
-  // } finally {
-  //   loadingSearchState.value = false;
-  //   showModal.value = false;
-  // }
-
-  // O fetchFavorites não é feito no try só pra ter mais resiliência, pois se caso o usuário não estivesse logado, o mesmo não seria capaz nem de visualizar a listagem dos deputados
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  favorites
-    .fetchFavorites(userId!)
-    .then((result) => (favoritesList = result))
-    .catch((e) => {
-      console.log(e);
-    })
-    .finally(async () => {
-      try {
-        loadingSearchState.value = true;
-        const response = await api.get('/deputados', { params });
-        if (!response.data.dados) {
-          throw new Error('Dados não encontrados');
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        congressPersonListFiltered.value = response.data.dados.map(
-          (item: CongressPerson) => {
-            // Melhora a complexidade disso aqui
-            return {
-              ...item,
-              favorite: favoritesList.some(
-                (favorite) => item.id === favorite.favorite_congress_person_id
-              ),
-            };
-          }
-        );
-        loadingSearchState.value = false;
-        showModal.value = false;
-      } catch (error) {
-        console.error(error);
+  try {
+    favoritesList = userId
+      ? await favorites.fetchFavorites(userId)
+      : favoritesList;
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    loadingSearchState.value = true;
+    const response = await api.get('/deputados', { params });
+    if (!response.data.dados) {
+      throw new Error('Dados não encontrados');
+    }
+    const favoritesSet = new Set(
+      favoritesList.map((favorite) => favorite.favorite_congress_person_id)
+    );
+    congressPersonListFiltered.value = response.data.dados.map(
+      (item: CongressPerson) => {
+        return {
+          ...item,
+          favorite: favoritesSet.has(item.id),
+        };
       }
-    });
+    );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingSearchState.value = false;
+    showModal.value = false;
+  }
 }
 
 async function fetchEntourageList() {
@@ -358,7 +324,6 @@ watch(search, getFilteredCongressPersonList);
 onMounted(async () => {
   await fetchCongressPersonList(params);
   await fetchEntourageList();
-  // TODO: Armazenar dados no pinia com um timestamp de expiração de 1 hora e usar os dados do pinia ao invés de fazer uma nova requisição
 });
 </script>
 

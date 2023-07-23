@@ -78,7 +78,6 @@ import { onMounted, ref } from 'vue';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
 import { useRouter } from 'vue-router';
-import { User } from '@supabase/supabase-js';
 
 const notify = useNotify();
 const useAuth = useAuthUser();

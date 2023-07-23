@@ -1,6 +1,6 @@
 <template>
   <q-virtual-scroll
-    v-if="CongressPersonExpensesData.dados"
+    v-if="CongressPersonExpensesData.dados?.length"
     :items="CongressPersonExpensesData.dados"
     separator
     virtual-scroll-slice-size="10"
@@ -34,12 +34,17 @@
       </q-item-section>
     </q-item>
   </q-virtual-scroll>
-  <q-item v-else>
+  <q-item v-else class="text-center">
     <q-item-section>
       <q-item-label class="text-h6">Nenhum resultado encontrado</q-item-label>
     </q-item-section>
   </q-item>
-  <q-item v-if="CongressPersonExpensesData.links">
+  <q-item
+    v-if="
+      CongressPersonExpensesData.dados?.length &&
+      CongressPersonExpensesData.links
+    "
+  >
     <q-item-section>
       <q-btn
         @click="
@@ -114,7 +119,6 @@ async function refreshData(url: string) {
   try {
     loadingData.value = true;
     if (url === '') throw new Error('Não há mais registros');
-
     const response = await api.get(url);
     CongressPersonExpensesData.value = response.data;
   } catch (error) {
