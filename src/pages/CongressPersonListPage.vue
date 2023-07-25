@@ -80,7 +80,7 @@
         v-if="congressPersonListFiltered.length"
         :items="congressPersonListFiltered"
         separator
-        virtual-scroll-slice-size="10"
+        virtual-scroll-slice-size="5"
         v-slot="{ item }"
       >
         <q-item :key="item.id" class="row items-center justify-between">
