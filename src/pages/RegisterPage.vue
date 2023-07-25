@@ -110,7 +110,7 @@ async function onSubmit() {
 
     router.push('/');
   } catch (error) {
-    notify.notifyError(String(error));
+    notify.notifyError(String(error).split(':')[1]);
   }
 }
 

@@ -68,9 +68,11 @@ function useAuthUser(): useAuthUserType {
     email: string,
     password: string
   ): Promise<void> => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    //Just register on database
+    const { error } = await supabase.auth.signUp({  email, password });
 
+    
+    
     if (error) {
       switch (error.status) {
         case 400:
@@ -84,6 +86,8 @@ function useAuthUser(): useAuthUserType {
         default:
           throw new Error('Serviço indisponível, tente novamente mais tarde.');
       }
+    }else{
+      user.value = null;
     }
   };
 

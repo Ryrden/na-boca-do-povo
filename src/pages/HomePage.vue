@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
 import { useRouter } from 'vue-router';
@@ -91,9 +91,9 @@ async function onSubmit() {
   try {
     await useAuth.login(username.value, password.value);
     notify.notifySuccess('Login bem sucedido!');
-    onLoggedIn();
+    router.push('/congressperson/list');
   } catch (error) {
-    notify.notifyError(String(error));
+    notify.notifyError(String(error).split(':')[1]);
   }
 }
 
@@ -102,30 +102,16 @@ function onReset() {
   password.value = '';
 }
 
-function onLoggedIn() {
-  router.go(-1);
-}
 
-onMounted(async () => {
-  if (useAuth.isLoggedIn()) {
-    const user = useAuth?.user;
-
-    username.value = user?.value?.email || '';
-    password.value = 'XXXXXXXXX';
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        notify.notifyWarning(
-          'Você já está logado, caso queira sair, clique em "Logout" no tela de configurações.'
-        );
-        onLoggedIn();
-        onReset();
-        resolve();
-      }, 2000);
-    });
+onBeforeMount(async () => {
+  if (useAuth.isLoggedIn()){
+    onReset();
+    setTimeout(() => {
+      router.go(-1);
+      notify.notifyWarning('Você já está logado, caso queira sair, clique em "Logout" no tela de configurações.');
+      }, 250);
   }
-});
+})
 </script>
 
 <style lang="scss" scoped>
