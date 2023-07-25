@@ -6,7 +6,7 @@ function useNotify() {
 
   const notifySuccess = (
     message = 'Sucesso! :)',
-    displayDurationInMiliseconds = 1000
+    displayDurationInMiliseconds = 1500
   ): void => {
     const options: QNotifyOptions = {
       type: 'positive',
@@ -18,7 +18,7 @@ function useNotify() {
 
   const notifyError = (
     message = 'Algo de errado ocorreu, tente novamente mais tarde...',
-    displayDurationInMiliseconds = 1000
+    displayDurationInMiliseconds = 1500
   ): void => {
     const options: QNotifyOptions = {
       type: 'negative',

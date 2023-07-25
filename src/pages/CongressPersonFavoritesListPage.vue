@@ -1,7 +1,20 @@
 <template>
   <q-page>
+    <q-item v-if="authUser.isUnauthenticated()" class="text-center column" >
+      <h6 class="text-h6 primary-title text-center q-mb-md">
+        Você precisa estar logado para adicionar e visualizar seus deputados favoritados!
+      </h6>
+
+      <q-btn
+        filled
+        full-width
+        label="Fazer Login"
+        color="primary main-btn"
+        @click="$router.push('/')"
+      />
+    </q-item>
     <q-virtual-scroll
-      v-if="congressPersonFavoritesList.length"
+      v-else-if="congressPersonFavoritesList.length"
       :items="congressPersonFavoritesList"
       separator
       virtual-scroll-slice-size="10"
@@ -41,18 +54,12 @@
         />
       </q-item>
     </q-virtual-scroll>
-    <q-item v-else class="column">
-      <h6 class="text-h6 primary-title text-center q-mb-md">
-        Você precisa estar logado para adicionar e visualizar seus deputados favoritados!
-      </h6>
-
-      <q-btn
-        filled
-        full-width
-        label="Fazer Login"
-        color="primary main-btn"
-        @click="$router.push('/')"
-      />
+    <q-item v-else class="text-center">
+      <q-item-section>
+        <q-item-label class="text-h6"
+          >Você ainda não possui deputados favoritos!</q-item-label
+        >
+      </q-item-section>
     </q-item>
   </q-page>
 </template>
@@ -92,12 +99,8 @@ async function removeFavorite(congressPerson: CongressPerson) {
 
 onMounted(async () => {
   if (authUser.isUnauthenticated()) {
-    notify.notifyError(
-      'Você precisa estar logado para visualizar seus deputados favoritados!'
-    );
     return;
   }
-
   try {
     const userId: string | undefined = authUser?.user?.value?.id;
 

@@ -24,7 +24,6 @@
         @click="showModal = true"
       />
     </div>
-    <!-- TODO: Filtro para componente (modal) -->
     <q-dialog v-model="showModal" full-width>
       <q-card>
         <q-card-section class="row items-center q-pb-none">

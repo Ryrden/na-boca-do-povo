@@ -90,6 +90,7 @@ import { useAuthUser } from 'src/composables/useAuthUser';
 import { useNotify } from 'src/composables/useNotify';
 import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const notify = useNotify();
 
 const username = ref('');
@@ -108,9 +109,7 @@ async function onSubmit() {
     // TODO: Arrumar cores do useNotify dependendo do caso
     notify.notifySuccess(`Conta ${username.value} criada com sucesso`);
 
-    // TODO: FIX THIS
-    const router = useRouter();
-    router.push({ name: 'login' });
+    router.push('/');
   } catch (error) {
     notify.notifyError(String(error));
   }
