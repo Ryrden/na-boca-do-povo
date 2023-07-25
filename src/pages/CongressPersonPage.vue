@@ -45,7 +45,6 @@
         <!-- icone Telefone  -->
         <q-item-label class="text-subtitle1">
           <q-icon name="phone" size="2rem" color="primary" alt="Telefone" />
-          <!-- TODO: Adicionar DDD (XX) XXXX-XXXX -->
           {{
             congressPersonData.ultimoStatus?.gabinete.telefone ||
             'Não informado'
@@ -113,12 +112,10 @@
             color="primary"
             alt="Rede Social"
           />
-          <!-- TODO: add underline to know that this is clickable -->
           {{ urlShortener(social) }}
         </q-item-label>
       </q-item-section>
     </q-item>
-    <!-- FIXME: justify-center é apenas no mobile, breakpoint n ta workando (justify-md-center)-->
     <q-item class="justify-center">
       <q-btn
         @click="openURL(`${camaraURL}/${congressPersonData.id}`)"

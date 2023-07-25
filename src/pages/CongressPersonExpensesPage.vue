@@ -17,7 +17,7 @@
             {{ dataFormat(item.dataDocumento) }}
           </q-chip>
         </q-item-label>
-        <!-- FIXME: em telas menores, o q-chip de tipo quebra a linha e fica ruim, ajustar responsividade -->
+        <!-- FIXME: em telas menores, o q-chip de tipo quebra a linha e fica ruim, ajustar responsividade (não encontrei solução)-->
         <q-item-label class="text-body1"
           ><span>Tipo:</span>
           <q-chip color="secondary" text-color="white">
@@ -131,7 +131,6 @@ async function refreshData(url: string) {
 onMounted(async () => {
   try {
     const congressPersonDataId = router.currentRoute.value.params.id;
-    //TODO: tratar vulnerabilidades de segurança
     loadingData.value = true;
     const response = await api.get(
       `/deputados/${congressPersonDataId}/despesas`,

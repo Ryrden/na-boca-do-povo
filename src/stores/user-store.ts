@@ -3,7 +3,6 @@ import { defineStore } from 'pinia';
 export const useUserStore = defineStore('user', {
   state: () => ({
     name: '',
-    //TODO: Definir o tipo de congressPersonFavoriteList como CongressPerson[]
     congressPersonFavoriteList: [] as any[],
   }),
 

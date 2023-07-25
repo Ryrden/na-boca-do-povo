@@ -101,7 +101,6 @@
             <q-item-section class="q-px-sm">
               <q-item-label class="text-h6 primary-title"
                 >{{ item.nome }}
-                <!-- TODO: Informar se está em exercicio da profissão aqui também -->
               </q-item-label>
               <q-item-label caption class="text-caption">
                 <q-chip class="chip">{{ item.siglaPartido }}</q-chip>
@@ -151,13 +150,6 @@ const siglaSexo = ref('');
 
 const congressPersonListFiltered = ref<CongressPerson[]>([]);
 
-// Filtros
-/* 
-TODO: 
-Passar todos os filtros para um componente, usar "Emit" 
-para passar os valores para o componente pai e usar o "watch" 
-para atualizar a lista de deputados 
-*/
 const entourageOptions = ref([]);
 const ufOptions = [
   'AC',

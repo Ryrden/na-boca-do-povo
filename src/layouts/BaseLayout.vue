@@ -34,7 +34,6 @@
           icon="favorite"
           @click="navigateTo('/congressperson/favorites')"
         />
-        <!-- TODO: allow change personal config after login (Show just if user is logged) -->
         <q-tab
           name="settings"
           icon="manage_accounts"
