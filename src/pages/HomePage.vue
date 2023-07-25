@@ -103,7 +103,7 @@ function onReset() {
 }
 
 function onLoggedIn() {
-  router.push('/congressperson/list');
+  router.go(-1);
 }
 
 onMounted(async () => {
@@ -116,8 +116,8 @@ onMounted(async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        notify.notifySuccess(
-          'Você já está logado, caso quiser deslogar, vá até a tela de configurações'
+        notify.notifyWarning(
+          'Você já está logado, caso queira sair, clique em "Logout" no tela de configurações.'
         );
         onLoggedIn();
         onReset();

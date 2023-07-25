@@ -106,7 +106,6 @@ async function onSubmit() {
     }
 
     await useAuthUser().register(username.value, password.value);
-    // TODO: Arrumar cores do useNotify dependendo do caso
     notify.notifySuccess(`Conta ${username.value} criada com sucesso`);
 
     router.push('/');

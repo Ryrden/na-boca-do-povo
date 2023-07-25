@@ -9,8 +9,8 @@ function useNotify() {
     displayDurationInMiliseconds = 1500
   ): void => {
     const options: QNotifyOptions = {
-      type: 'positive',
       message: message,
+      color: 'positive',
       timeout: displayDurationInMiliseconds,
     };
     $q.notify(options);
@@ -21,8 +21,21 @@ function useNotify() {
     displayDurationInMiliseconds = 1500
   ): void => {
     const options: QNotifyOptions = {
-      type: 'negative',
       message: message,
+      color: 'negative',
+      timeout: displayDurationInMiliseconds,
+    };
+    $q.notify(options);
+  };
+
+  const notifyWarning = (
+    message = 'Algo de errado ocorreu, tente novamente mais tarde...',
+    displayDurationInMiliseconds = 1500
+  ): void => {
+    const options: QNotifyOptions = {
+      message: message,
+      color: 'warning',
+      textColor: 'black',
       timeout: displayDurationInMiliseconds,
     };
     $q.notify(options);
@@ -31,6 +44,7 @@ function useNotify() {
   return {
     notifySuccess,
     notifyError,
+    notifyWarning,
   };
 }
 
